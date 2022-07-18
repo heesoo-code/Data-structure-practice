@@ -77,12 +77,19 @@
 파이썬에서 **인스턴스 변수(Instance Variable)** 는 객체에 정보를 저장하기 위해 선언한다.
 객체를 생성하기 위한 **객체 생성자(Constructor)** 를 클래스 내부에 선언한다.
 
-"
-'''python
-class dfd:
-    def_init_(self, name, id)
-'''
-"
+<pre>
+<code>
+class Student:
+    def _init_(self, name, id) //student의 객체 생성자
+        self.name = name //인스턴스 변수
+        self.id = id //인스턴스 변수
+    def get_name(self):      //name을 리턴하는 메서드
+        return self.name
+    def get_id(self):        //id를 리턴하는 메서드
+        return self.id
+
+</code>
+</pre>
 
 
 
