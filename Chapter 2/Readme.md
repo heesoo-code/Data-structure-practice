@@ -12,6 +12,7 @@
 
 <pre>
 <code>
+<python>
 class SList:
     class Node
         def __init__(self, item, link):
@@ -68,6 +69,7 @@ class SList:
 
 class EmptyError(Exception):
     pass
+</python>
 </code>
 </pre>
 
