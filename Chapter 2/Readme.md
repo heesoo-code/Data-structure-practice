@@ -8,48 +8,89 @@
 
 ![Alt text](/Chapter%202/%EC%98%88%EC%8B%9C.png)
 
-- 실제로 사용되는 자료구조(파이썬에서)
-   * 리스트
-   * 연결리스트
-   * 스택과 큐
-   * 다양한 트리
-   * 해시테이블
-   * 그래프
+**단순연결리스트** 에서는 삽입이나 삭제시 항목들이 땡겨지거나 옮길필요가 없다. 하지만 원하는 항목을 탐색하려면 무조건 첫 노드부터 탐색해야 하기 때문에 **순차탐색(Sequential Search)** 을 해야만 한다.
+
+<pre>
+<code>
+class SList:
+    class Node
+        def __init__(self, item, link):
+            self.item = item    // 노드 생성자
+            self.next = link   // 다음 노드 레퍼런스
+    
+    def __init__(self):
+        self.head = None   // 단순연결리스트 생성자, head와 항목 수(size)로 구성
+        self.size = 0
+
+    def size(self): return self.size
+    def is_empty(self): return self.size == 0
+
+    def insert_front(self, item):
+        if self.is_empty():   // empty일경우에
+            self.head = self.Node(item, None)   // head가 새 노드 참조
+        else:
+            self.head = self.Node(item, self.head)    // head가 새 노드 참조
+        self.size += 1
+    
+    def insert_after(self, item, p):
+        p.next = SList.Node(item, p.next)   // 새 노드가 p 다음 노드가 됨
+        self.size += 1
+    
+    def delete_front(self):
+        if self.is_empty():   // empty인 경우 에러처리
+            raise EmptyError('Underflow')
+        else:
+            self.head = self.head.next   // head가 둘쨰 노드를 참조
+            self.size -= 1
+
+    def delete_after(self, p):
+        if self.is_empty():   // empty인 경우 에러처리
+            raise EmptyError('Underflow')
+        t = p.next
+        p.next = t.next   // p 다음 노드를 건너뛰어 연결
+        self.size -= 1
+
+    def search(self, target):
+        p = self.head   // head부터 순차탐색
+        for k in range(self.size):
+            if target == p.item: return k    // 탐색 성공의 경우
+            p = p.next
+        return None    // 탐색 실패일 경우
+
+    def print_list
+        p = self.head
+        while p:
+            if p.next != None:
+                print(p.item, ' -> ', end='')
+            else:
+                print(p.item)
+            p = p.next    // 노드들을 순차 탐색
+
+class EmptyError(Exception):
+    pass
+</code>
+</pre>
+
+
+삭제 연산 수행시 연결리스트가 empty일 경우 **Underflow** 가 발생한다.
 
 ------
-2.수행시간의 분석
+2.이중연결리스트
 ------
 
-자료구조의 효율성이 알고싶으면 자료구조에 대해 수행되는 연산의 수행시간을 측정하면 된다.
+**이중연결리스트(DOubly Linked List)** 는 각 노드가 두 개의 레퍼런스를 가지고 각각 이전 노드와 다음 노드를 가리키는 연결리스트이다.
 
-이 효율을 측정하는 방식은 알고리즘의 성능 분석과 똑같게 수행시간을 나타내는 **시간 복잡도(Time Complexity)** 와 수행되는 동안 사용되는 메모리 공간의 크기를 나타내는 **공간복잡도(Space Complexity)** 을 기반으로 분석한다.
+![Alt text](/Chapter%202/%EC%98%88%EC%8B%9C2.png)
 
-하지만 대부분의 알고리즘은 비슷한 크기의 메모리 공간을 사용하기 때문에 보통은 시간복잡도만을 사용하여 성능을 분석한다.
 
-오해가능한 부분
-
-    그냥 단순히 프로그램을 실행시켜서 걸리는 시간을 보면 안되나?
-
-단순히 생각하기에는 변수(개발자의 숙련도, 언어의 종류, 컴퓨터 성능)가 너무 많아서 수행시간을 정확하게 재기 어렵다.
-
-자료구조에서 **기본연산(Elementary Operation)** 데이터간 크기 비교, 데이터 읽기 및 갱신, 숫자 계산 등과 같은 간단한 연산을 의미한다.
-
-- 수행시간(시간복잡도) 분석 방법 
-1. 최악경우 분석(Worst-case Analysis)
-
-    최악의 경우를 상정하여 상한선을 두는 분석방법이다. 버스를 예로 들면 여러 변수(길막힘, 교통신호)들이 있어도 10분이내에는 도착할 것이다라고 상한선을 둘 수 있다. 보통 가장 많이 쓰인다.
-
-2. 평균경우 분석(Average-case Analysis)
-
-    평균의 경우를 상정하여 평균을 찾는 분석방법이다. 버스를 예로 들면 10번의 버스를 기다렸다고 치면 걸린시간을 전부 더하고 10으로 나눠서 평균적으로 버스가 오는 시간을 구하는 방식이다.
-
-3. 최선경우 분석(Best-case Analysis)
-
-    최선의 경우를 상정하여 하한선을 두는 분석방법이다. 버스를 예로 들면 모든 변수가 긍정적으로 작용해서 빨리 도착한다면 3분만에 도착한다고 생각하는 방식이다.
 
 ------
-3.수행시간의 점근표기법
+3.원형연결리스트
 ------
+
+**원형연결리스트(Circular Linked List)** 는 마지막 노드가 첫 노드와 연결된 단순연결리스트이다.
+
+![Alt text](/Chapter%202/%EC%98%88%EC%8B%9C3.png)
 
 - 점근표기법
 수행시간은 알고리즘이 수행하는 기본 연산 횟수를 입력 크기에 대한 함수로 표현한 것이다. 이러한 함수는 주로 여러 개의 항을 가지는 다항식으로 표현되므로 이를 입력의 크기에 대한 함수로 표현하기 위해 점근표기법이 사용된다.
