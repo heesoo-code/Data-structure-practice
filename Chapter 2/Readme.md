@@ -10,53 +10,51 @@
 
 **단순연결리스트** 에서는 삽입이나 삭제시 항목들이 땡겨지거나 옮길필요가 없다. 하지만 원하는 항목을 탐색하려면 무조건 첫 노드부터 탐색해야 하기 때문에 **순차탐색(Sequential Search)** 을 해야만 한다.
 
-<pre>
-<code>
-<python>
+``` python
 class SList:
     class Node
         def __init__(self, item, link):
-            self.item = item    // 노드 생성자
-            self.next = link   // 다음 노드 레퍼런스
+            self.item = item    # 노드 생성자
+            self.next = link   # 다음 노드 레퍼런스
     
     def __init__(self):
-        self.head = None   // 단순연결리스트 생성자, head와 항목 수(size)로 구성
+        self.head = None   # 단순연결리스트 생성자, head와 항목 수(size)로 구성
         self.size = 0
 
     def size(self): return self.size
     def is_empty(self): return self.size == 0
 
     def insert_front(self, item):
-        if self.is_empty():   // empty일경우에
-            self.head = self.Node(item, None)   // head가 새 노드 참조
+        if self.is_empty():   # empty일경우에
+            self.head = self.Node(item, None)   # head가 새 노드 참조
         else:
-            self.head = self.Node(item, self.head)    // head가 새 노드 참조
+            self.head = self.Node(item, self.head)    # head가 새 노드 참조
         self.size += 1
     
     def insert_after(self, item, p):
-        p.next = SList.Node(item, p.next)   // 새 노드가 p 다음 노드가 됨
+        p.next = SList.Node(item, p.next)   # 새 노드가 p 다음 노드가 됨
         self.size += 1
     
     def delete_front(self):
-        if self.is_empty():   // empty인 경우 에러처리
+        if self.is_empty():   # empty인 경우 에러처리
             raise EmptyError('Underflow')
         else:
-            self.head = self.head.next   // head가 둘쨰 노드를 참조
+            self.head = self.head.next   # head가 둘쨰 노드를 참조
             self.size -= 1
 
     def delete_after(self, p):
-        if self.is_empty():   // empty인 경우 에러처리
+        if self.is_empty():   # empty인 경우 에러처리
             raise EmptyError('Underflow')
         t = p.next
-        p.next = t.next   // p 다음 노드를 건너뛰어 연결
+        p.next = t.next   # p 다음 노드를 건너뛰어 연결
         self.size -= 1
 
     def search(self, target):
-        p = self.head   // head부터 순차탐색
+        p = self.head   # head부터 순차탐색
         for k in range(self.size):
-            if target == p.item: return k    // 탐색 성공의 경우
+            if target == p.item: return k    # 탐색 성공의 경우
             p = p.next
-        return None    // 탐색 실패일 경우
+        return None    # 탐색 실패일 경우
 
     def print_list
         p = self.head
@@ -65,13 +63,12 @@ class SList:
                 print(p.item, ' -> ', end='')
             else:
                 print(p.item)
-            p = p.next    // 노드들을 순차 탐색
+            p = p.next    # 노드들을 순차 탐색
 
 class EmptyError(Exception):
     pass
-</python>
-</code>
-</pre>
+
+```
 
 
 삭제 연산 수행시 연결리스트가 empty일 경우 **Underflow** 가 발생한다.
@@ -84,7 +81,64 @@ class EmptyError(Exception):
 
 ![Alt text](/Chapter%202/%EC%98%88%EC%8B%9C2.png)
 
+장점 : 이전 노드를 가리키는 레퍼런스를 알 필요 x(시간절약), 역방향 탐색 가능
+단점 : 1개의 레퍼런스를 추가로 저장(추가 공간 필요)
 
+``` python
+class DList:
+    class Node
+        def __init__(self, item, prev, link):
+            self.item = item    # 노드 생성자
+            self.prev = prev   # 이전 노드 레퍼런스
+            self.next = link   # 다음 노드 레퍼런스
+    
+    def __init__(self):  #이중연결 리스트 생성자
+        self.head = self.Node(None, None, None)     # head
+        self.tail = self.Node(None, self.head, None)    # tail
+        self.head.next = self.tail
+        self.size = 0   # 항목 수
+
+    def size(self): return self.size
+    def is_empty(self): return self.size == 0
+
+    def insert_before(self, p, item):
+        t = p.prev
+        n = self.Node(item, t, p)   # 새 노드 생성하여 n이 참조
+        p.prev = n  #  새 노드와 앞뒤 노드 연결
+        t.next = n  #  새 노드와 앞뒤 노드 연결
+        self.size += 1
+    
+    def insert_after(self, item, p):
+        t = p.next
+        n = self.Node(item, t, p)   # 새 노드 생성하여 n이 참조
+        t.prev = n  #  새 노드와 앞뒤 노드 연결
+        p.next = n  #  새 노드와 앞뒤 노드 연결
+        self.size += 1
+    
+    def delete(self, x):
+        f = x.prev
+        r = x.next
+        f.next = r  #  x를 건너 뛰고 x의 앞뒤 노드를 연결
+        r.prev = f  #  x를 건너 뛰고 x의 앞뒤 노드를 연결
+        self.size -= 1
+        return x.item
+
+    def print_list
+        if self.is_empty():
+            print('리스트 비어있음')
+        else
+            p = self.head.next
+            while p != self.tail:
+                if p.next != self.tail:
+                    print(p.item, ' <=> ', end='')
+            else:
+                print(p.time)
+            p = p.next
+
+class EmptyError(Exception):
+    pass
+
+```
 
 ------
 3.원형연결리스트
@@ -93,6 +147,9 @@ class EmptyError(Exception):
 **원형연결리스트(Circular Linked List)** 는 마지막 노드가 첫 노드와 연결된 단순연결리스트이다.
 
 ![Alt text](/Chapter%202/%EC%98%88%EC%8B%9C3.png)
+
+장점 : 한 노드에서 다른 모든 노드로의 접근이 가능(노드 삽입, 삭제가 단순해짐)
+단점 : 노드의 삽입, 삭제 시 선행 노드의 포인터가 필요
 
 - 점근표기법
 수행시간은 알고리즘이 수행하는 기본 연산 횟수를 입력 크기에 대한 함수로 표현한 것이다. 이러한 함수는 주로 여러 개의 항을 가지는 다항식으로 표현되므로 이를 입력의 크기에 대한 함수로 표현하기 위해 점근표기법이 사용된다.
@@ -122,12 +179,12 @@ class EmptyError(Exception):
 <pre>
 <code>
 class Student:
-    def _init_(self, name, id) //student의 객체 생성자
-        self.name = name //인스턴스 변수
-        self.id = id //인스턴스 변수
-    def get_name(self):      //name을 리턴하는 메서드
+    def _init_(self, name, id) #student의 객체 생성자
+        self.name = name #인스턴스 변수
+        self.id = id #인스턴스 변수
+    def get_name(self):      #name을 리턴하는 메서드
         return self.name
-    def get_id(self):        //id를 리턴하는 메서드
+    def get_id(self):        #id를 리턴하는 메서드
         return self.id
 
 </code>
